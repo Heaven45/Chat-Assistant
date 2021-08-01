@@ -8,4 +8,5 @@
     <string name="record_audio">Запись аудио</string>
     <string name="action_stop_title">Остановить</string>
     <string name="action_clear_title">Очистить</string>
+    <string name="voice_message">Голосовое сообщение</string>
 </resources>
