@@ -6,4 +6,6 @@
     <string name="connection_lost">Соединение потеряно</string>
     <string name="empty_request">Запрос не может быть пустым</string>
     <string name="record_audio">Запись аудио</string>
+    <string name="action_stop_title">Остановить</string>
+    <string name="action_clear_title">Очистить</string>
 </resources>
