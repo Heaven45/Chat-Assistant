@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chat Assistant</string>
+    <string name="error">Error</string>
+    <string name="enter_your_request">Enter your request</string>
+    <string name="connection_lost">Connection lost</string>
+    <string name="empty_request">Request should not be empty</string>
+    <string name="record_audio">Record audio</string>
 </resources>

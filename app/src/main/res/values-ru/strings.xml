@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chat Assistant</string>
+    <string name="error">Ошибка</string>
+    <string name="enter_your_request">Введите ваш запрос</string>
+    <string name="connection_lost">Соединение потеряно</string>
+    <string name="empty_request">Запрос не может быть пустым</string>
+    <string name="record_audio">Запись аудио</string>
+</resources>
