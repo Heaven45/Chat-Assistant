@@ -2,6 +2,7 @@ package com.example.chatassistant
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,7 +19,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.w3c.dom.Text
 import java.lang.StringBuilder
+import java.util.*
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,12 +38,17 @@ class MainActivity : AppCompatActivity() {
 
     val pods = mutableListOf<HashMap<String, String>>()
 
+    lateinit var textToSpeech: TextToSpeech
+
+    var isTtsReady: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initViews()
         initWalframEngine()
+        initTts()
     }
 
     fun initViews() {
@@ -68,6 +77,13 @@ class MainActivity : AppCompatActivity() {
             intArrayOf(R.id.title, R.id.content)
         )
         podsList.adapter = podsAdapter
+        podsList.setOnItemClickListener { parent, view, position, id ->
+            if (isTtsReady) {
+                val title = pods[position]["Title"]
+                val content = pods[position]["Content"]
+                textToSpeech.speak(content, TextToSpeech.QUEUE_FLUSH, null, title)
+            }
+        }
 
         val voiceInputButton: FloatingActionButton = findViewById(R.id.voice_input_button)
         voiceInputButton.setOnClickListener {
@@ -83,9 +99,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_stop -> {
-                Log.d(TAG, "ACTION STOP")
+                if (isTtsReady) {
+                    textToSpeech.stop()
+                }
                 return true
             }
             R.id.action_clear -> {
@@ -106,12 +124,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showSnackbar(message: String) {
-        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE).apply {
-            setAction(android.R.string.ok) {
-                dismiss()
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE)
+            .apply {
+                setAction(android.R.string.ok) {
+                    dismiss()
+                }
+                show()
             }
-            show()
-        }
     }
 
     fun askWolfram(request: String) {
@@ -156,6 +175,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun initTts() {
+        textToSpeech = TextToSpeech(this) { code ->
+            if (code != TextToSpeech.SUCCESS) {
+                Log.e(TAG, "TTS error code: $code")
+                showSnackbar(getString(R.string.error_tts_is_not_ready))
+            } else {
+                isTtsReady = true
+            }
+        }
+        textToSpeech.language = Locale.US
     }
 
 }

@@ -10,4 +10,5 @@
     <string name="action_stop_title">Stop</string>
     <string name="action_clear_title">Clear</string>
     <string name="voice_message">Voice message</string>
+    <string name="error_tts_is_not_ready">TTS is not ready</string>
 </resources>
