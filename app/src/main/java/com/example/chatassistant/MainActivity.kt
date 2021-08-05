@@ -1,7 +1,9 @@
 package com.example.chatassistant
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
@@ -19,7 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.w3c.dom.Text
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.HashMap
@@ -41,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var textToSpeech: TextToSpeech
 
     var isTtsReady: Boolean = false
+
+    val VOICE_RECOGNITION_REQUEST_CODE: Int = 888
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +90,14 @@ class MainActivity : AppCompatActivity() {
 
         val voiceInputButton: FloatingActionButton = findViewById(R.id.voice_input_button)
         voiceInputButton.setOnClickListener {
-            Log.d(TAG, "FAB")
+            pods.clear()
+            podsAdapter.notifyDataSetChanged()
+
+            if (isTtsReady) {
+                textToSpeech.stop()
+            }
+
+            showVoiceInputDialog()
         }
 
         progressBar = findViewById(R.id.progress_bar)
@@ -189,4 +199,30 @@ class MainActivity : AppCompatActivity() {
         textToSpeech.language = Locale.US
     }
 
+    fun showVoiceInputDialog() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.enter_your_request))
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US)
+        }
+
+        runCatching {
+            startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE)
+        }.onFailure { t ->
+            showSnackbar(t.message ?: getString(R.string.error_voice_recognition_unavailable))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+            data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)?.let { question ->
+                requestInput.setText(question)
+                askWolfram(question)
+            }
+        }
+    }
 }
