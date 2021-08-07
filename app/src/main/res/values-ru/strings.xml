@@ -9,4 +9,8 @@
     <string name="action_stop_title">Остановить</string>
     <string name="action_clear_title">Очистить</string>
     <string name="voice_message">Голосовое сообщение</string>
+    <string name="error_do_not_understand">Я вас не понял</string>
+    <string name="error_something_went_wrong">Что-то пошло не так</string>
+    <string name="error_tts_is_not_ready">TTS не готов к работе</string>
+    <string name="error_voice_recognition_unavailable">Распознавание голоса недоступно</string>
 </resources>

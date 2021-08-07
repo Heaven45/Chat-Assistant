@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Chat Assistant</string>
     <string name="error">Error</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="error_do_not_understand">I don\'t understand you</string>
     <string name="enter_your_request">Enter your request</string>
     <string name="connection_lost">Connection lost</string>
     <string name="empty_request">Request should not be empty</string>
@@ -8,4 +10,7 @@
     <string name="action_stop_title">Stop</string>
     <string name="action_clear_title">Clear</string>
     <string name="voice_message">Voice message</string>
+    <string name="error_tts_is_not_ready">TTS is not ready</string>
+    <string name="error_voice_recognition_unavailable">Voice recognition is unavailable</string>
+
 </resources>
